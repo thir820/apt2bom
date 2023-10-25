@@ -42,9 +42,9 @@ def write_package_lists(config, lists: PackageLists):
         json.dump(packages, f, indent=4, cls=JsonSerializer)
 
     file = os.path.join(config['dir-out'], config['missing-out'])
-    with open(config['missing-out'], 'w') as f:
+    with open(file, 'w') as f:
         f.write('\n'.join(lists.missing_packages))
     
     file = os.path.join(config['dir-out'], config['broken-out'])
-    with open(config['broken-out'], 'w') as f:
+    with open(file, 'w') as f:
         f.write('\n'.join(lists.broken_packages))
