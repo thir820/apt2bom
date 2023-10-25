@@ -174,7 +174,7 @@ def parse_source_index(
         
         if line.startswith(' ') and (package_list or files_list):
             if package_list:
-                 parts = re.split("\s+", line)
+                 parts = re.split("\s+", line.strip())
                  source.package_list.append((parts[0], parts[1:]))
 
             elif files_list:
