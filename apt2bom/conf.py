@@ -1,15 +1,19 @@
 """
 apt2bom config handling.
 """
+import os
 import json
 import logging
+
+
+logger = logging.getLogger('conf')
 
 
 def read_config(file: str = 'config.json') -> dict:
     """
     Read configuration file.
     """
-    logging.debug('Reading config from %s ...', file)
+    logger.debug('Reading config from %s ...', file)
 
     config = None
     with open(file, 'r', encoding='utf-8') as f:
@@ -22,20 +26,34 @@ def read_packages(config) -> (list[str], list[str]):
     """
     Read PROD and DEV root packages.
     """
-    logging.debug('Reading productive packages from %s ...', config['prod-packages'])
     prod = None
-    with open(config['prod-packages'], 'r', encoding='utf-8') as f:
-        prod = [line.split(' ')[0].strip() for line in f.readlines()]
+    file = config['packages']['ecu_productive']
+    if os.path.exists(file):
+        logger.debug('Reading productive packages from %s ...', file)
+        with open(file, 'r', encoding='utf-8') as f:
+            prod = [line.split(' ')[0].strip() for line in f.readlines()]
 
-    logging.debug('Reading development packages from %s ...', config['dev-packages'])
     dev = None
-    with open(config['dev-packages'], 'r', encoding='utf-8') as f:
-        dev = [line.split(' ')[0].strip() for line in f.readlines()]
+    file = config['packages']['ecu_development']
+    if os.path.exists(file):
+        logger.debug('Reading development packages from %s ...', file)
+        with open(file, 'r', encoding='utf-8') as f:
+            dev = [line.split(' ')[0].strip() for line in f.readlines()]
+
+    sdk = None
+    file = config['packages']['sdk']
+    if os.path.exists(file):
+        logger.debug('Reading SDK packages from %s ...', file)
+        with open(file, 'r', encoding='utf-8') as f:
+            sdk = [line.split(' ')[0].strip() for line in f.readlines()]
     
-    if not prod and not dev:
-        logging.error('No root packages defined!')
+    if not prod and not dev and not sdk:
+        logger.error('No root packages defined!')
+        exit(1)
+    elif 'architectures' not in config['packages'] or not config['packages']['architectures']:
+        logger.error('No architectures defined!')
         exit(1)
     else:
-        logging.info('Found %d prod packages and %d dev packages.', len(prod), len(dev))
+        logger.info('Found %d prod packages and %d dev packages.', len(prod), len(dev))
     
-    return prod, dev
+    return prod, dev, sdk

@@ -7,13 +7,16 @@ from .apt_data import AptRepository, Index, Component, Package, Source, SourceFi
 from .apt_download import get_distro_url, read_gz_url, read_url
 
 
+logger = logging.getLogger('apt_parsing')
+
+
 def parse_apt_repository(
         url: str,
         distribution: str,
         components: list[str] | None,
         content: list[str]) -> AptRepository:
     """
-    Parse APT metadata from "Release" file.
+    Parse APT metadata from 'Release' file.
     """
     repo = AptRepository()
     repo.url = url
@@ -45,7 +48,7 @@ def parse_apt_repository(
             if not line.startswith(' '):
                 break
 
-            _, md5, size, path = re.split("\s+", line)
+            _, md5, size, path = re.split('\s+', line)
             if '/' in path:
                 index = Index()
                 index.checksum = md5
@@ -64,17 +67,18 @@ def parse_apt_repository(
                 
                 repo.components[component].indices.append(index)
 
-                logging.debug("%s %s", component, index)
+                logger.debug('%s %s', component, index)
 
-    logging.debug("Repository: %s", repo)
+    logger.debug('Repository: %s', repo)
     return repo
 
 
 def parse_package_index(
-        url: str, base_url: str, repo: AptRepository,
+        url: str, base_url: str,
+        repo: AptRepository,
         component: Component) -> dict[str, Package]:
     """
-    Read an binary package index "Packages.gz" file.
+    Read an binary package index 'Packages.gz' file.
     """
     if base_url[-1] != '/':
         base_url += '/'
@@ -174,11 +178,11 @@ def parse_source_index(
         
         if line.startswith(' ') and (package_list or files_list):
             if package_list:
-                 parts = re.split("\s+", line.strip())
+                 parts = re.split('\s+', line.strip())
                  source.package_list.append((parts[0], parts[1:]))
 
             elif files_list:
-                _, check, size, filename = re.split("\s+", line)
+                _, check, size, filename = re.split('\s+', line)
                 
                 if filename not in source.files:
                     file = SourceFile()
@@ -195,7 +199,7 @@ def parse_source_index(
                 elif checksum == 'Sha512':
                     source.files[filename].sha512 = check
                 else:
-                    logging.warning("Unknown checksum type %s", checksum)
+                    logger.warning('Unknown checksum type %s', checksum)
 
         else:
             package_list = False
@@ -260,7 +264,7 @@ def scan_apt_repository(
     """
     Read all packages and sources from the given APT repository.
     """
-    logging.info('Parsing repository %s %s %s %s',
+    logger.info('Parsing repository %s %s %s %s',
                 url, distribution, architectures, components)
     
     release = get_distro_url(url, distribution, 'Release')
@@ -276,7 +280,7 @@ def scan_apt_repository(
     
     for component in components:
         if not component in repo.components:
-            logging.warning("Component %s not found in repository %s", component, repo)
+            logger.warning('Component %s not found in repository %s', component, repo)
             continue
 
         comp = repo.components[component]
@@ -286,23 +290,24 @@ def scan_apt_repository(
 
             for index in comp.indices:
                 if index_folder in index.url and 'Packages.gz' in index.url:
-                    logging.debug("Parsing %s", index)
-                    packages = parse_package_index(index.url, url, repo, component)
+                    logger.debug('Parsing %s', index)
+                    packages = parse_package_index(index.url, url, repo, comp)
                     for package in packages.keys():
-                        if comp.packages.get(package) is not None:
-                            logging.warning("Duplicate package %s in %s", package, index.url)
-                        else:
-                            comp.packages[package] = packages[package]
+                        if package not in comp.packages:
+                            comp.packages[package] = {}
+                            comp.packages[package][arch] = []
+
+                        comp.packages[package][arch].append(packages[package])
 
         repo.components[component] = comp
 
         for index in comp.indices:
             if 'source' in index.url and 'Sources.gz' in index.url:
-                logging.debug("Parsing %s", index)
-                sources = parse_source_index(index.url, url, repo, component)
+                logger.debug('Parsing %s', index)
+                sources = parse_source_index(index.url, url, repo, comp)
                 for source in sources.keys():
                     if comp.sources.get(source) is not None:
-                        logging.warning("Duplicate source %s in %s", package, index.url)
+                        logger.warning('Duplicate source %s in %s', package, index.url)
                     else:
                         comp.sources[source] = sources[source]
 
@@ -312,12 +317,14 @@ def scan_apt_repository(
             for source_name in comp.sources.keys():
                 source = comp.sources[source_name]
                 if package in source.binaries:
-                    comp.packages[package].source = source
+                    for a in comp.packages[package].keys():
+                        for p in comp.packages[package][a]:
+                            p.source = source
                     break
 
         repo.components[component] = comp
 
-        logging.info("Component %s: %d packages, %d sources.", comp.name, len(comp.packages), len(comp.sources))
+        logger.info('Component %s: %d packages, %d sources.', comp.name, len(comp.packages), len(comp.sources))
     
     return repo
 
@@ -337,7 +344,7 @@ def scan_repositories(config) -> list[AptRepository]:
         if 'components' in repository:
             components = repository['components']
         
-        logging.debug('Scanning apt repository %s', repository['url'])
+        logger.debug('Scanning apt repository %s', repository['url'])
 
         repo = scan_apt_repository(
             url=repository['url'],

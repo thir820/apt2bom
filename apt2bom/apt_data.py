@@ -5,8 +5,9 @@ from __future__ import annotations
 
 import json
 import logging
-from logging.config import dictConfig
 
+
+logger = logging.getLogger('apt_data')
 
 class SourceFile:
     """
@@ -49,7 +50,6 @@ class Source:
         self.files: dict[str, SourceFile] = {}
         self.repository: AptRepository = repository
         self.component: Component = component
-        
 
     def __repr__(self) -> str:
         return f'Source({self.package})'
@@ -102,8 +102,8 @@ class Package:
         data = self.__dict__.copy()
         if self.source:
             data['source'] = self.source.to_data()
-        del data['repository']
-        del data['component']
+        data['repository'] = self.repository.to_data_non_recursive()
+        data['component'] = self.component.to_data_non_recursive()
         return data
 
 
@@ -121,7 +121,7 @@ class Component:
     def __init__(self):
         self.name: str = None
         self.indices: list[Index] = []
-        self.packages: dict[str, Package] = {}
+        self.packages: dict[str, dict[str, list[Package]]] = {}
         self.sources: dict[str, Source] = {}
 
     def __repr__(self) -> str:
@@ -130,7 +130,16 @@ class Component:
     def to_data(self) -> dict:
         data = self.__dict__.copy()
         data['packages'] = [self.packages[key] for key in self.packages.keys()]
-        data['sources'] = [self.sources[key] for key in self.sources.keys()]
+        return data
+    
+    def to_data_non_recursive(self) -> dict:
+        """
+        Convert class to non-recursive data object.
+        """
+        data = self.to_data()
+        del data['packages']
+        del data['sources']
+        del data['indices']
         return data
 
 
@@ -155,16 +164,26 @@ class AptRepository:
         data = self.__dict__.copy()
         data['components'] = [self.components[key] for key in self.components.keys()]
         return data
+    
+    def to_data_non_recursive(self) -> dict:
+        """
+        Convert class to non-recursive data object.
+        """
+        data = self.to_data()
+        del data['components']
+        del data['architectures']
+        del data['component_names']
+        return data
 
 
 class JsonSerializer(json.JSONEncoder):
     def default(self, o):
-        to_data = getattr(o, "to_data", None)
+        to_data = getattr(o, 'to_data', None)
         if callable(to_data):
             return o.to_data()
 
         if o.__dict__:
             return o.__dict__
 
-        logging.error("No serialization for %s (%s)!", type(o), str(o)[30:])
+        logger.error('No serialization for %s (%s)!', type(o), str(o)[30:])
         return None

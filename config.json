@@ -1,0 +1,41 @@
+{
+    "repositories": [
+        {
+            "url": "http://archive.ubuntu.com/ubuntu/",
+            "distribution": "jammy",
+            "components": [
+                "main"
+            ],
+            "architectures": [
+                "amd64"
+            ]
+        },
+        {
+            "url": "http://ports.ubuntu.com/ubuntu-ports/",
+            "distribution": "jammy",
+            "components": [
+                "main"
+            ],
+            "architectures": [
+                "arm64"
+            ]
+        }
+    ],
+    "packages": {
+        "ecu_productive": "prod_packages.txt",
+        "ecu_development": "dev_packages.txt",
+        "sdk": "sdk_packages.txt",
+        "architectures": [
+            "amd64",
+            "arm64"
+        ]
+    },
+    "output": {
+        "directory": "output",
+        "ecu_json": "ecu_packages.json",
+        "sdk_json": "sdk_packages.json",
+        "missing": "missing_packages.txt",
+        "broken": "broken_packages.txt",
+        "apt_data_dump": "repos.json"
+    }
+}

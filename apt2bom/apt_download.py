@@ -7,6 +7,9 @@ import gzip
 import logging
 
 
+logger = logging.getLogger('apt_data')
+
+
 def read_gz_url(url: str) -> str:
     """
     Read a gz compressed file from an URL.
@@ -14,10 +17,10 @@ def read_gz_url(url: str) -> str:
     response = requests.get(url)
 
     if response.status_code != 200:
-        logging.error("Reading %s failed!", url)
+        logger.error('Reading %s failed!', url)
         return []
     else:
-        logging.debug("Reading %s: %d", url, response.status_code)
+        logger.debug('Reading %s: %d', url, response.status_code)
 
     file_stream = io.BytesIO(response.content)
     with gzip.GzipFile(fileobj=file_stream) as f:

@@ -3,10 +3,6 @@ output/**/*
 
 *.log
 
-config.json
-dev_packages.txt
-prod_packages.txt
-
 # Created by https://www.toptal.com/developers/gitignore/api/python,linux,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,linux,visualstudiocode
 
