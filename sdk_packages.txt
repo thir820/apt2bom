@@ -1,0 +1,9 @@
+linux-image-generic
+openssh-client
+openssh-server
+netbase
+sudo
+cron
+grub2-common
+systemd
+locales
