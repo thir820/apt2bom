@@ -4,7 +4,8 @@
             "url": "http://archive.ubuntu.com/ubuntu/",
             "distribution": "jammy",
             "components": [
-                "main"
+                "main",
+                "universe"
             ],
             "architectures": [
                 "amd64"
@@ -14,7 +15,8 @@
             "url": "http://ports.ubuntu.com/ubuntu-ports/",
             "distribution": "jammy",
             "components": [
-                "main"
+                "main",
+                "universe"
             ],
             "architectures": [
                 "arm64"
@@ -36,6 +38,7 @@
         "sdk_json": "sdk_packages.json",
         "missing": "missing_packages.txt",
         "broken": "broken_packages.txt",
-        "apt_data_dump": "repos.json"
+        "apt_data_dump": "repos.json",
+        "excel": "packages.xlsx"
     }
 }
