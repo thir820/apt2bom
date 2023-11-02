@@ -121,6 +121,9 @@ def parse_package_index(
                 if ' ' in depend:
                     name, version = depend.split(' ', maxsplit=1)
                     package.depends.append((name, version))
+                elif ':' in depend:
+                    name, version = depend.split(':', maxsplit=1)
+                    package.depends.append((name, version))
                 elif depend.strip() != '':
                     package.depends.append((depend, ''))
         elif line.startswith('Recommends:'):
@@ -229,6 +232,9 @@ def parse_source_index(
                     depend = depend.strip()
                     if ' ' in depend:
                         name, version = depend.split(' ', maxsplit=1)
+                        depends.append((name, version))
+                    elif ':' in depend:
+                        name, version = depend.split(':', maxsplit=1)
                         depends.append((name, version))
                     elif depend.strip != '':
                         depends.append((depend, ''))

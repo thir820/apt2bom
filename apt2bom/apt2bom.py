@@ -6,6 +6,7 @@ from .conf import read_config, read_packages
 from .apt_parsing import scan_repositories
 from .resolve_lists import resolve_package_lists
 from .output import write_package_lists, write_repos
+from .excel import write_excel_package_list
 
 
 logger = logging.getLogger('apt2bom')
@@ -27,7 +28,7 @@ def run():
     
     # dump APT metadata
     logger.info('Dump apt metadata...')
-    # write_repos(config, repos)
+    write_repos(config, repos)
 
     # resolve packages
     logger.info('Resolve packages...')
@@ -37,3 +38,7 @@ def run():
     # write package lists
     logger.info('Writing package lists...')
     write_package_lists(config, lists)
+
+    # write excel list
+    logger.info('Writing excel list...')
+    write_excel_package_list(config, lists)

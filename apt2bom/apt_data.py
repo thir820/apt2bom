@@ -51,6 +51,28 @@ class Source:
         self.repository: AptRepository = repository
         self.component: Component = component
 
+    def to_record(self) -> dict[str, str]:
+        data = self.__dict__.copy()
+        data['binaries'] = ', '.join(self.binaries)
+        data['build_depends'] = ', '.join([f'{name} {version}' for name, version in self.build_depends])
+        data['package_list'] = ', '.join([name for name, _ in self.package_list])
+        data['files'] = ', '.join(self.files.keys())
+
+        del data['repository']
+        
+        for key, value in self.repository.to_data_non_recursive().items():
+            if key not in data:
+                data[key] = value
+        
+        data['repository_version'] = self.repository.version
+        
+        del data['component']
+
+        data['component'] = self.component.name
+
+        return data
+        
+
     def __repr__(self) -> str:
         return f'Source({self.package})'
     
@@ -94,6 +116,33 @@ class Package:
         self.pkg_type: str = None
         self.repository: AptRepository = repository
         self.component: Component = component
+
+    def to_record(self) -> dict[str, str]:
+        data = self.__dict__.copy()
+        data['depends'] = ', '.join([f'{name} {version}' for name, version in self.depends])
+        data['task'] = ', '.join(self.task)
+
+        if self.source:
+            del data['source']
+
+            for key, value in self.source.to_record().items():
+                data[f'source_{key}'] = value
+
+        del data['repository']
+        
+        for key, value in self.repository.to_data_non_recursive().items():
+            if key not in data:
+                data[key] = value
+        
+        data['repository_version'] = self.repository.version
+        data['repository_description'] = self.repository.description
+        
+        del data['component']
+
+        data['component'] = self.component.name
+
+        return data
+
 
     def __repr__(self) -> str:
         return f'Package({self.package}, {self.filename})'

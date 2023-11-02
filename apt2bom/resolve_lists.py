@@ -25,6 +25,9 @@ def resolve_package(repos: list[AptRepository], pkg: str, arch: str) -> Package 
     if not pkg or pkg == '':
         logger.info('Invalid package name: |%s|', pkg)
         return
+    
+    if ':' in pkg:
+        pkg = pkg.split(':', maxsplit=1)[0]
 
     # TODO: repo priorities
     for repo in repos:
@@ -61,14 +64,16 @@ def resolve_rt_dependencies_recursive(repos: list[AptRepository],
 
         dep_package = resolve_package(repos, dep, arch)
         if dep_package:
-            dep_package.pkg_type = dep_type
+            if dep_package.pkg_type is None:
+                dep_package.pkg_type = dep_type
             packages[dep] = dep_package
             #recursive resolve dependencies
             for (dep, _) in dep_package.depends:
                 if dep not in packages:
                     dep_dep_package = resolve_package(repos, dep, arch)
                     if dep_dep_package:
-                        dep_dep_package.pkg_type = dep_type
+                        if dep_dep_package.pkg_type is None:
+                            dep_dep_package.pkg_type = dep_type
                         packages[dep] = dep_dep_package
                         packages, missing_packages = resolve_rt_dependencies_recursive(
                             repos, packages, missing_packages, dep, arch)
@@ -99,7 +104,7 @@ def resolve_runtime_dependencies(repos: list[AptRepository],
         packages, missing_packages = resolve_rt_dependencies_recursive(
             repos, packages, missing_packages, pkg, arch)
 
-    logger.info('Found %d ECU packages', len(packages))
+    logger.info('Found %d packages', len(packages))
 
     return packages, missing_packages
 
@@ -118,7 +123,10 @@ def resolve_build_time_dependencies(repos: list[AptRepository],
     for pkg in ecu_packages.keys():
         package = ecu_packages[pkg]
         root_type = package.pkg_type.split('_')[0]
-        dep_type = f'{root_type}SDK'
+        if not root_type.endswith('SDK'):
+            dep_type = f'{root_type}SDK'
+        else:
+            dep_type = root_type
 
         if not package.source:
             logger.error('No source metadata for %s!', pkg)
@@ -129,7 +137,8 @@ def resolve_build_time_dependencies(repos: list[AptRepository],
         for (dep, _) in package.source.build_depends:
             dep_package = resolve_package(repos, dep, arch)
             if dep_package:
-                dep_package.pkg_type = dep_type
+                if dep_package.pkg_type is None:
+                    dep_package.pkg_type = dep_type
                 sdk_packages[dep] = dep_package
                 package_names.append(dep)
             else:
@@ -171,7 +180,8 @@ def resolve_package_lists(repos: list[AptRepository],
         for pkg, pkg_type in packages:
             package = resolve_package(repos, pkg, arch)
             if package:
-                package.pkg_type = pkg_type
+                if package.pkg_type is None:
+                    package.pkg_type = pkg_type
                 ecu_packages[pkg] = package
                 found_packages.append(pkg)
             else:
@@ -196,7 +206,36 @@ def resolve_package_lists(repos: list[AptRepository],
         missing_arch_packages[arch] = missing_packages
         broken_arch_packages[arch] = broken_packages
 
-    # TODO: resolve SDK packages
+    # resolve SDK packages
+    packages = [(pkg, 'SDK') for pkg in sdk]
+    for arch in architectures:
+        missing_packages = set()
+        found_packages = []
+        sdk_packages: dict[str, Package] = {}
+        for pkg, pkg_type in packages:
+            package = resolve_package(repos, pkg, arch)
+            if package:
+                if package.pkg_type is None:
+                    package.pkg_type = pkg_type
+                sdk_packages[pkg] = package
+                found_packages.append(pkg)
+            else:
+                logger.error('Package %s (%s) not found!', pkg, pkg_type)
+                missing_packages.add(pkg)
+
+        logger.info('Resolved %d packages.', len(packages))
+
+        sdk_packages, missing_packages = resolve_runtime_dependencies(
+            repos, sdk_packages, missing_packages, found_packages, arch)
+
+        logger.info('Resolved %d SDK packages.', len(sdk_packages))
+        logger.info('Missing packages: %s', missing_packages)
+        logger.info('Broken packages: %s', broken_packages)
+
+        sdk_arch_packages[arch].update(sdk_packages)
+
+        missing_arch_packages[arch].update(missing_packages)
+        broken_arch_packages[arch].update(broken_packages)
 
     lists = PackageLists()
     lists.ecu_packages = ecu_arch_packages
