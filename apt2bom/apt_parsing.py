@@ -114,6 +114,23 @@ def parse_package_index(
             package.bugs = line[5:].strip()
         elif line.startswith('Installed-Size:'):
             package.installed_size = int(line[15:].strip())
+        elif line.startswith('Provides:'):
+            provides = line[9:].strip().split(',')
+            for provide in provides:
+                provide = provide.strip()
+                if ' ' in provide:
+                    name, version = provide.split(' ', maxsplit=1)
+                    package.provides.append((name, version))
+                elif ':' in provide:
+                    name, version = provide.split(':', maxsplit=1)
+                    package.provides.append((name, version))
+                elif provide.strip() != '':
+                    package.provides.append((provide, ''))
+            
+            for provide, _ in package.provides:
+                if provide not in packages:
+                    packages[provide] = package
+
         elif line.startswith('Depends:'):
             depends = line[8:].strip().split(',')
             for depend in depends:

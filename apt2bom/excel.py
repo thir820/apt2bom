@@ -22,6 +22,7 @@ package_headers = [
     'original_maintainer',
     'bugs',
     'installed_size',
+    'provides',
     'depends',
     'recommends',
     'suggests',

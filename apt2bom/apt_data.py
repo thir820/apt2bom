@@ -100,6 +100,7 @@ class Package:
         self.bugs: str = None
         self.installed_size: int = -1
         self.depends: list[tuple[str, str]] = []
+        self.provides: list[tuple[str, str]] = []
         self.recommends: str = None
         self.suggests: str = None
         self.filename: str = None
@@ -121,6 +122,7 @@ class Package:
         data = self.__dict__.copy()
         data['depends'] = ', '.join([f'{name} {version}' for name, version in self.depends])
         data['task'] = ', '.join(self.task)
+        data['provides'] = ', '.join([f'{name} {version}' for name, version in self.provides])
 
         if self.source:
             del data['source']
