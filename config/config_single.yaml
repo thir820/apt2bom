@@ -1,0 +1,44 @@
+repositories: 
+    # list of used apt repositories
+    - url: "http://archive.ubuntu.com/ubuntu/"
+      distribution: "jammy"
+      components: 
+        # list of components to use from this repository
+        - "main"
+        # - "universe"
+      architectures:
+        # list of architectures to use from this repository
+        - "amd64"
+    - url: "http://ports.ubuntu.com/ubuntu-ports/"
+      distribution: "jammy"
+      components:
+        - "main"
+        # - "universe"
+      architectures:
+        - "arm64"
+packages: # input data
+    # productive root packages for the embedded image
+    ecu_productive: "../examples/single/prod_packages.txt"
+    # development root packages for the embedded image
+    ecu_development: "../examples/single/dev_packages.txt"
+    # additional packages for the SDK environment
+    sdk: "../examples/single/sdk_packages.txt"
+    architectures:
+        # used architectures
+        - "amd64"
+        - "arm64"
+output:
+    # output folder
+    directory: "output_single"
+    # file of json dump of resolved ecu packages
+    ecu_json: "ecu_packages.json"
+    # file of json dump of resolved SDK packages
+    sdk_json: "sdk_packages.json"
+    # list of not resolvable packages
+    missing: "missing_packages.txt"
+    # list of incomplete packages, e.g. missing source
+    broken: "broken_packages.txt"
+    # optional: dump of parsed repository data (can be huge)
+    # apt_data_dump: "repos.json"
+    # package lists as Excel document, for inspection    
+    excel: "packages.xlsx"
