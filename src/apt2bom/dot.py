@@ -12,11 +12,11 @@ def write_ecu_runtime_dot_graph(config, lists: PackageLists):
     for arch in config['packages']['architectures']:
         content = "digraph {\n"
 
-        for name in lists.ecu_packages:
-            if arch in lists.ecu_packages[name]:
-                package = lists.ecu_packages[name][arch]
-                depends = ' '.join([name for name, _ in package.depends])
-                content += f'{package.package} -> {depends}\n'
+        if arch in lists.ecu_packages:
+            for name in lists.ecu_packages[arch]:
+                package = lists.ecu_packages[arch][name]
+                depends = ' '.join([f'"{name}"' for name, _ in package.depends])
+                content += f'    "{package.package}" -> {{{depends}}}\n'
         
         content += '}'
 
@@ -25,6 +25,8 @@ def write_ecu_runtime_dot_graph(config, lists: PackageLists):
             f'runtime_deps_{arch}.dot')
         with open(file, 'w') as f:
             f.write(content)
+    
+        os.system(f'dot -Tsvg {file} > {file}.svg')
 
 
 def write_ecu_build_time_dot_graph(config, lists: PackageLists):
@@ -34,13 +36,13 @@ def write_ecu_build_time_dot_graph(config, lists: PackageLists):
     for arch in config['packages']['architectures']:
         content = "digraph {\n"
 
-        for name in lists.ecu_packages:
-            if arch in lists.ecu_packages[name]:
-                package = lists.ecu_packages[name][arch]
+        if arch in lists.ecu_packages:
+            for name in lists.ecu_packages[arch]:
+                package = lists.ecu_packages[arch][name]
                 if package.source:
                     build_depends = ' '.join(
-                        [name for name, _ in package.source.build_depends])
-                    content += f'{package.package} -> {build_depends}\n'
+                        [f'"{name}"' for name, _ in package.source.build_depends])
+                    content += f'    "{package.package}" -> {{{build_depends}}}\n'
         
         content += '}'
 
@@ -49,3 +51,5 @@ def write_ecu_build_time_dot_graph(config, lists: PackageLists):
             f'build_time_deps_{arch}.dot')
         with open(file, 'w') as f:
             f.write(content)
+        
+        os.system(f'dot -Tsvg {file} > {file}.svg')

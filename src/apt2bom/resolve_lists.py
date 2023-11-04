@@ -78,7 +78,7 @@ def resolve_rt_dependencies_recursive(repos: list[AptRepository],
                         packages, missing_packages = resolve_rt_dependencies_recursive(
                             repos, packages, missing_packages, dep, arch)
                     else:
-                        logger.error('Package %s not found!', package_name)
+                        logger.debug('Package %s not found!', package_name)
                         missing_packages.add(package_name)
         else:
             logger.error('Package %s (%s) not found!', dep, package.pkg_type)
@@ -229,8 +229,8 @@ def resolve_package_lists(repos: list[AptRepository],
             repos, sdk_packages, missing_packages, found_packages, arch)
 
         logger.info('Resolved %d SDK packages.', len(sdk_packages))
-        logger.info('Missing packages: %s', missing_packages)
-        logger.info('Broken packages: %s', broken_packages)
+        logger.info('Missing %d packages.', len(missing_packages))
+        logger.info('Broken %d packages.', len(broken_packages))
 
         sdk_arch_packages[arch].update(sdk_packages)
 

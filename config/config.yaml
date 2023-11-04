@@ -5,7 +5,7 @@ repositories:
       components: 
         # list of components to use from this repository
         - "main"
-        - "universe"
+        # - "universe"
       architectures:
         # list of architectures to use from this repository
         - "amd64"
@@ -13,7 +13,7 @@ repositories:
       distribution: "jammy"
       components:
         - "main"
-        - "universe"
+        # - "universe"
       architectures:
         - "arm64"
 packages: # input data
@@ -39,6 +39,6 @@ output:
     # list of incomplete packages, e.g. missing source
     broken: "broken_packages.txt"
     # optional: dump of parsed repository data (can be huge)
-    apt_data_dump: "repos.json"
+    # apt_data_dump: "repos.json"
     # package lists as Excel document, for inspection    
     excel: "packages.xlsx"

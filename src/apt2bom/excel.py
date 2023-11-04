@@ -118,15 +118,15 @@ def write_excel_package_list(config, lists: PackageLists):
     sources: dict[str, Source] = {}
     # collect all source packages
     for arch in config['packages']['architectures']:
-        for name in lists.ecu_packages.keys():
-            if arch in lists.ecu_packages[name]:
-                package = lists.ecu_packages[name][arch]
+        if arch in lists.ecu_packages:
+            for name in lists.ecu_packages[arch]:
+                package = lists.ecu_packages[arch][name]
                 if package.source:
                     if package.source.package not in sources:
                         package.source.pkg_type = package.pkg_type
                         sources[package.source.package] = package.source
 
-    source_list = sources.values()
+    source_list = list(sources.values())
     source_list.sort(key=lambda source: source.package)
 
     ws.append(source_headers)
@@ -141,9 +141,9 @@ def write_excel_package_list(config, lists: PackageLists):
     for arch in config['packages']['architectures']:
         ws = wb.create_sheet(f'{arch} ECU Packages')
         ecu_packages : list[Package] = []
-        for name in lists.ecu_packages:
-            if arch in lists.ecu_packages[name]:
-                ecu_packages.append(lists.ecu_packages[name][arch])
+        if arch in lists.ecu_packages:
+            for name in lists.ecu_packages[arch]:
+                ecu_packages.append(lists.ecu_packages[arch][name])
 
         if ecu_packages:
             ecu_packages.sort(key=lambda package: package.package)
@@ -159,9 +159,9 @@ def write_excel_package_list(config, lists: PackageLists):
         ws = wb.create_sheet(f'{arch} SDK Packages')
 
         sdk_packages : list[Package] = []
-        for name in lists.sdk_packages:
-            if arch in lists.sdk_packages[name]:
-                sdk_packages.append(lists.sdk_packages[name][arch])
+        if arch in lists.sdk_packages:
+            for name in lists.sdk_packages[arch]:
+                sdk_packages.append(lists.sdk_packages[arch][name])
 
         if sdk_packages:
             sdk_packages.sort(key=lambda package: package.package)
