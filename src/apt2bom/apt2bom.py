@@ -12,14 +12,14 @@ from .excel import write_excel_package_list
 logger = logging.getLogger('apt2bom')
 
 
-def run():
+def run(config: str ='config.yaml'):
     print('apt2bom - package lists form APT metadata')
     print('Configuring loggers...')
     logger.info('apt2bom - package lists form APT metadata')
 
     # read config and input
     logger.info('Read inputs...')
-    config = read_config()
+    config = read_config(file=config)
     prod, dev, sdk = read_packages(config)
 
     # read apt metadata

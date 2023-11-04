@@ -2,7 +2,7 @@
 apt2bom config handling.
 """
 import os
-import json
+import yaml
 import logging
 
 
@@ -13,11 +13,14 @@ def read_config(file: str = 'config.json') -> dict:
     """
     Read configuration file.
     """
+    if file is None:
+        file = 'config.yaml'
+
     logger.debug('Reading config from %s ...', file)
 
     config = None
     with open(file, 'r', encoding='utf-8') as f:
-        config = json.load(f)
+        config = yaml.safe_load(f)
 
     return config
 
