@@ -1,6 +1,6 @@
 # apt2bom
 
-apt2bom is a tool to generate software bill of material (SBOM) templates form apt metadata.
+apt2bom is a tool to generate software bill of material (SBoM) templates form apt metadata.
 
 ## Background
 

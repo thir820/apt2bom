@@ -7,19 +7,20 @@ from .apt_parsing import scan_repositories
 from .resolve_lists import resolve_package_lists
 from .output import write_package_lists, write_repos
 from .excel import write_excel_package_list
+from .dot import write_ecu_runtime_dot_graph, write_ecu_build_time_dot_graph
 
 
 logger = logging.getLogger('apt2bom')
 
 
-def run():
+def run(config: str ='config.yaml'):
     print('apt2bom - package lists form APT metadata')
     print('Configuring loggers...')
     logger.info('apt2bom - package lists form APT metadata')
 
     # read config and input
     logger.info('Read inputs...')
-    config = read_config()
+    config = read_config(file=config)
     prod, dev, sdk = read_packages(config)
 
     # read apt metadata
@@ -42,3 +43,9 @@ def run():
     # write excel list
     logger.info('Writing excel list...')
     write_excel_package_list(config, lists)
+
+    # dot graphs
+    logger.info('Writing runtime dependencies dot graphs...')
+    write_ecu_runtime_dot_graph(config, lists)
+    logger.info('Writing build time dependencies dot graphs...')
+    write_ecu_build_time_dot_graph(config, lists)

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://github.com/thir820/apt2bom/example/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Example - apt2bom</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Example";
+        var mkdocs_page_input_path = "example.md";
+        var mkdocs_page_url = "/thir820/apt2bom/example/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> apt2bom
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Example</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#runtime-dependencies">Runtime dependencies</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#source-packages">Source packages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#build-time-dependencies">Build time dependencies</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">apt2bom</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Example</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/thir820/apt2bom/edit/main/docs_src/example.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="example-vim">Example: vim</h1>
+<p>Let's take a look at  image which shall contain vim.</p>
+<h2 id="runtime-dependencies">Runtime dependencies</h2>
+<p>To be able to run vim, the image needs to contain the full dependency graph of vim. The metadata for vim for amd64 looks like:</p>
+<pre><code>Package: vim
+Architecture: amd64
+Version: 2:8.2.3995-1ubuntu2
+Priority: optional
+Section: editors
+Origin: Ubuntu
+Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;
+Original-Maintainer: Debian Vim Maintainers &lt;team+vim@tracker.debian.org&gt;
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Installed-Size: 3916
+Provides: editor
+Depends: vim-common (= 2:8.2.3995-1ubuntu2), vim-runtime (= 2:8.2.3995-1ubuntu2), libacl1 (&gt;= 2.2.23), libc6 (&gt;= 2.34), libgpm2 (&gt;= 1.20.7), libpython3.10 (&gt;= 3.10.0), libselinux1 (&gt;= 3.1~), libsodium23 (&gt;= 1.0.14), libtinfo6 (&gt;= 6)
+Suggests: ctags, vim-doc, vim-scripts
+Filename: pool/main/v/vim/vim_8.2.3995-1ubuntu2_amd64.deb
+Size: 1723566
+MD5sum: 3b0145d5f4ab60dde45b0b02259c6d5d
+SHA1: a5cb8feca431a2ce584bcd6f1ebf0f8e6b40c163
+SHA256: 13684fabc8fd8765cf55e03cbf2558392a3682be4d0929e71c3ad5adfc14643d
+SHA512: 1eccbe94bec70eab284fb35276fe61b2e13b43a23f9a80ab3caa945986e23c0d4776aef5b28bab177cfba1f6f493b73a0be4014a5255f388ee17b697bb73a48b
+Homepage: https://www.vim.org/
+Description: Vi IMproved - enhanced vi editor
+Task: cloud-image, ubuntu-wsl, server, ubuntu-server-raspi, lubuntu-desktop
+Description-md5: 59e8b8f7757db8b53566d5d119872de8
+</code></pre>
+<p>The vim package has the following dependencies:</p>
+<ul>
+<li>vim-common</li>
+<li>vim-runtime</li>
+<li>libacl1</li>
+<li>libc6</li>
+<li>libgpm2</li>
+<li>libpython3.10</li>
+<li>libselinux1</li>
+<li>libsodium23</li>
+<li>libtinfo6</li>
+</ul>
+<p>These packages have again dependencies which must be included in the image.</p>
+<p>Following all these dependencies leads to the following graph:</p>
+<p><img alt="vim runtime dependencies" src="../runtime_deps_amd64.dot.svg" />
+<a href="../runtime_deps_amd64.dot.svg">vim runtime dependencies</a></p>
+<p>Flattening of this graph leads results in the following package list:</p>
+<ul>
+<li>debconf</li>
+<li>dpkg</li>
+<li>gcc-12-base</li>
+<li>libacl1</li>
+<li>libbz2-1.0</li>
+<li>libc6</li>
+<li>libcom-err2</li>
+<li>libcrypt1</li>
+<li>libdb5.3</li>
+<li>libexpat1</li>
+<li>libffi8</li>
+<li>libgcc-s1</li>
+<li>libgpm2</li>
+<li>libgssapi-krb5-2</li>
+<li>libk5crypto3</li>
+<li>libkeyutils1</li>
+<li>libkrb5-3</li>
+<li>libkrb5support0</li>
+<li>liblzma5</li>
+<li>libmpdec3</li>
+<li>libncursesw6</li>
+<li>libnsl2</li>
+<li>libpcre2-8-0</li>
+<li>libpython3.10</li>
+<li>libpython3.10-minimal</li>
+<li>libpython3.10-stdlib</li>
+<li>libreadline8</li>
+<li>libselinux1</li>
+<li>libsodium23</li>
+<li>libsqlite3-0</li>
+<li>libssl3</li>
+<li>libstdc++6</li>
+<li>libtinfo6</li>
+<li>libtirpc-common</li>
+<li>libtirpc3</li>
+<li>libuuid1</li>
+<li>media-types</li>
+<li>readline-common</li>
+<li>tar</li>
+<li>vim</li>
+<li>vim-common</li>
+<li>vim-runtime</li>
+<li>xxd</li>
+<li>zlib1g</li>
+</ul>
+<h3 id="source-packages">Source packages</h3>
+<p>To maintain the Debian packages above, the sources of these packages are needed. It's quite common that one source package is split into multiple binary packages. The metadata of the vim source is:</p>
+<pre><code>Package: vim
+Format: 3.0 (quilt)
+Binary: vim-common, vim-gui-common, vim-runtime, vim-doc, vim-tiny, vim, vim-gtk, vim-gtk3, vim-nox, vim-athena, xxd
+Architecture: any all
+Version: 2:8.2.3995-1ubuntu2
+Priority: important
+Section: editors
+Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;
+Original-Maintainer: Debian Vim Maintainers &lt;team+vim@tracker.debian.org&gt;
+Uploaders:  James McCoy &lt;jamessan@debian.org&gt;,
+Standards-Version: 4.5.0
+Build-Depends: autoconf, cscope &lt;!nocheck&gt;, debhelper-compat (= 12), libacl1-dev, libcanberra-dev, libgpmg1-dev [linux-any], libgtk-3-dev, liblua5.2-dev, libperl-dev, libselinux1-dev [linux-any], libsodium-dev, libncurses-dev, libtool-bin &lt;!nocheck&gt;, libxaw7-dev, libxpm-dev, libxt-dev, lua5.2, procps &lt;!nocheck&gt;, python3-dev, ruby [!alpha !ia64] &lt;!pkg.vim.noruby&gt;, ruby-dev [!alpha !ia64] &lt;!pkg.vim.noruby&gt;, tcl-dev
+Build-Depends-Indep: docbook-utils, docbook-xml, ghostscript, lynx, pdf2svg
+Build-Conflicts: autoconf2.13
+Testsuite: autopkgtest
+Homepage: https://www.vim.org/
+Vcs-Browser: https://salsa.debian.org/vim-team/vim
+Vcs-Git: https://salsa.debian.org/vim-team/vim.git
+Directory: pool/main/v/vim
+Package-List:
+ vim deb editors optional arch=any
+ vim-athena deb editors optional arch=any
+ vim-common deb editors important arch=all
+ vim-doc deb doc optional arch=all
+ vim-gtk deb oldlibs optional arch=all
+ vim-gtk3 deb editors optional arch=any
+ vim-gui-common deb editors optional arch=all
+ vim-nox deb editors optional arch=any
+ vim-runtime deb editors optional arch=all
+ vim-tiny deb editors important arch=any
+ xxd deb editors optional arch=any
+Files:
+ a2dfd0d7176f27fed8716eb2452162b5 3021 vim_8.2.3995-1ubuntu2.dsc
+ bb2772b6d389efcc334e9653e9a459de 10377164 vim_8.2.3995.orig.tar.xz
+ 7ccc0227d0b99b578bcb5714eab56e93 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Checksums-Sha1:
+ 92a65bc7cbbf5922ff4a4c1887168e7b4a8fc435 3021 vim_8.2.3995-1ubuntu2.dsc
+ 78e84e3594b054511d43fd5a1a88410bf5c70c9c 10377164 vim_8.2.3995.orig.tar.xz
+ b7c818b1d462283b40e23e2f833331bfd9222a68 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Checksums-Sha256:
+ b3855970dfb3c0fb40dd062e1bbb872c3655bdb3dd82c30790e88437f40d790b 3021 vim_8.2.3995-1ubuntu2.dsc
+ a9d4993d94a212c1e284fe19d7127508dc9c911cddaf91f2a6f72d0b9b71b8ce 10377164 vim_8.2.3995.orig.tar.xz
+ d8d46b9c06b21ea047cc540aa29a8549ba97ba80b4734bdd3eb25e77fe07bb46 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Checksums-Sha512:
+ 3d3ca057126d06262ea7f2d120350adb355ffb685fa411c5503c36ef027d3bb4e3e5810bd59a4fbfb35942f47686ceb303a049d35324fd5e6b130dc4575f970b 3021 vim_8.2.3995-1ubuntu2.dsc
+ 2326b3484858c92f55076bcd2336290cc292b35c9a8963e3b14e7140dd1fe36179fe8431d71b0121f8345dac3627c80cd016899aa6120f3354fa882144a28b07 10377164 vim_8.2.3995.orig.tar.xz
+ af3f4f0672a4f9987a7060d530e620215fc4b65de9eb4e45090d93ca07e57f488609f6a033ab997f12528a7bffa20fabe082abd3312c22b692fcd7da316969d4 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Testsuite-Triggers: cscope, procps
+</code></pre>
+<p>This vim source package creates the following binary packages:</p>
+<ul>
+<li>vim-common</li>
+<li>vim-gui-common</li>
+<li>vim-runtime</li>
+<li>vim-doc</li>
+<li>vim-tiny</li>
+<li>vim</li>
+<li>vim-gtk</li>
+<li>vim-gtk3</li>
+<li>vim-nox</li>
+<li>vim-athena</li>
+<li>xxd</li>
+</ul>
+<h2 id="build-time-dependencies">Build time dependencies</h2>
+<p>To maintain these packages, it's necessary to being able to rebuild each of these packages.</p>
+<p>The metadata for the vim source package is:</p>
+<pre><code>Package: vim
+Format: 3.0 (quilt)
+Binary: vim-common, vim-gui-common, vim-runtime, vim-doc, vim-tiny, vim, vim-gtk, vim-gtk3, vim-nox, vim-athena, xxd
+Architecture: any all
+Version: 2:8.2.3995-1ubuntu2
+Priority: important
+Section: editors
+Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;
+Original-Maintainer: Debian Vim Maintainers &lt;team+vim@tracker.debian.org&gt;
+Uploaders:  James McCoy &lt;jamessan@debian.org&gt;,
+Standards-Version: 4.5.0
+Build-Depends: autoconf, cscope &lt;!nocheck&gt;, debhelper-compat (= 12), libacl1-dev, libcanberra-dev, libgpmg1-dev [linux-any], libgtk-3-dev, liblua5.2-dev, libperl-dev, libselinux1-dev [linux-any], libsodium-dev, libncurses-dev, libtool-bin &lt;!nocheck&gt;, libxaw7-dev, libxpm-dev, libxt-dev, lua5.2, procps &lt;!nocheck&gt;, python3-dev, ruby [!alpha !ia64] &lt;!pkg.vim.noruby&gt;, ruby-dev [!alpha !ia64] &lt;!pkg.vim.noruby&gt;, tcl-dev
+Build-Depends-Indep: docbook-utils, docbook-xml, ghostscript, lynx, pdf2svg
+Build-Conflicts: autoconf2.13
+Testsuite: autopkgtest
+Homepage: https://www.vim.org/
+Vcs-Browser: https://salsa.debian.org/vim-team/vim
+Vcs-Git: https://salsa.debian.org/vim-team/vim.git
+Directory: pool/main/v/vim
+Package-List:
+ vim deb editors optional arch=any
+ vim-athena deb editors optional arch=any
+ vim-common deb editors important arch=all
+ vim-doc deb doc optional arch=all
+ vim-gtk deb oldlibs optional arch=all
+ vim-gtk3 deb editors optional arch=any
+ vim-gui-common deb editors optional arch=all
+ vim-nox deb editors optional arch=any
+ vim-runtime deb editors optional arch=all
+ vim-tiny deb editors important arch=any
+ xxd deb editors optional arch=any
+Files:
+ a2dfd0d7176f27fed8716eb2452162b5 3021 vim_8.2.3995-1ubuntu2.dsc
+ bb2772b6d389efcc334e9653e9a459de 10377164 vim_8.2.3995.orig.tar.xz
+ 7ccc0227d0b99b578bcb5714eab56e93 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Checksums-Sha1:
+ 92a65bc7cbbf5922ff4a4c1887168e7b4a8fc435 3021 vim_8.2.3995-1ubuntu2.dsc
+ 78e84e3594b054511d43fd5a1a88410bf5c70c9c 10377164 vim_8.2.3995.orig.tar.xz
+ b7c818b1d462283b40e23e2f833331bfd9222a68 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Checksums-Sha256:
+ b3855970dfb3c0fb40dd062e1bbb872c3655bdb3dd82c30790e88437f40d790b 3021 vim_8.2.3995-1ubuntu2.dsc
+ a9d4993d94a212c1e284fe19d7127508dc9c911cddaf91f2a6f72d0b9b71b8ce 10377164 vim_8.2.3995.orig.tar.xz
+ d8d46b9c06b21ea047cc540aa29a8549ba97ba80b4734bdd3eb25e77fe07bb46 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Checksums-Sha512:
+ 3d3ca057126d06262ea7f2d120350adb355ffb685fa411c5503c36ef027d3bb4e3e5810bd59a4fbfb35942f47686ceb303a049d35324fd5e6b130dc4575f970b 3021 vim_8.2.3995-1ubuntu2.dsc
+ 2326b3484858c92f55076bcd2336290cc292b35c9a8963e3b14e7140dd1fe36179fe8431d71b0121f8345dac3627c80cd016899aa6120f3354fa882144a28b07 10377164 vim_8.2.3995.orig.tar.xz
+ af3f4f0672a4f9987a7060d530e620215fc4b65de9eb4e45090d93ca07e57f488609f6a033ab997f12528a7bffa20fabe082abd3312c22b692fcd7da316969d4 224424 vim_8.2.3995-1ubuntu2.debian.tar.xz
+Testsuite-Triggers: cscope, procps
+</code></pre>
+<p>The vim package has the following build time dependencies:</p>
+<ul>
+<li>autoconf</li>
+<li>cscope</li>
+<li>debhelper-compat</li>
+<li>libacl1-dev</li>
+<li>libcanberra-dev</li>
+<li>libgpmg1-dev</li>
+<li>libgtk-3-dev</li>
+<li>liblua5.2-dev</li>
+<li>libperl-dev</li>
+<li>libselinux1-dev</li>
+<li>libsodium-dev</li>
+<li>libncurses-dev</li>
+<li>libtool-bin</li>
+<li>libxaw7-dev</li>
+<li>libxpm-dev</li>
+<li>libxt-dev</li>
+<li>lua5.2</li>
+<li>procps</li>
+<li>python3-dev</li>
+<li>ruby</li>
+<li>ruby-dev</li>
+<li>tcl-dev</li>
+</ul>
+<p>The full graph of all build-time dependencies is:</p>
+<p><img alt="vim runtime dependencies" src="../build_time_deps_amd64.dot.svg" />
+<a href="../build_time_deps_amd64.dot.svg">vim runtime dependencies</a></p>
+<p>Overall, vim and it's runtime dependencies have 620 build-time dependencies. To be able to maintain the Linux image containing vim, we also need to have all these packages.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/thir820/apt2bom" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
