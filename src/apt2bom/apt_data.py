@@ -48,6 +48,7 @@ class Source:
         self.directory: str = None
         self.package_list: list[tuple[str, list[str]]] = []
         self.files: dict[str, SourceFile] = {}
+        self.pkg_type: str = None
         self.repository: AptRepository = repository
         self.component: Component = component
 
